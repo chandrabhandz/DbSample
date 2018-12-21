@@ -13,13 +13,14 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Scanner;
 
+import static com.sample.dbsample.Constants.TAB_SPACES;
+
 public class Update {
 
     private static final Logger LOGGER = Logger.getLogger(Application.class);
-    private static final String TAB_SPACES = "\t\t\t\t\t\t";
     private static final String UPDATE_QUERY = "UPDATE employees SET name = '";
 
-    public Update(String username, String password) throws SQLException {
+    public Update(DbUtilities dbUtilities) {
         Scanner userInput = new Scanner(System.in);
         LOGGER.info(TAB_SPACES + "Selected option is : Update employee's Details ");
 
@@ -33,7 +34,7 @@ public class Update {
         }
 
         //retrieve record to update
-        Employee employee = displayRecord(email, username, password);
+        Employee employee = displayRecord(email, dbUtilities);
 
         String name;
         LOGGER.info(TAB_SPACES + "Enter employee name : ");
@@ -50,8 +51,6 @@ public class Update {
             LOGGER.info("\n");
         }
 
-        DbUtilities dbUtilities = new DbUtilities(username, password, "Organization");
-
         String query;
         if (StringUtils.isBlank(name)) {
             query = UPDATE_QUERY + employee.getName() + "',mobile_No = '" + mobile + "' WHERE email = '" + email + "'";
@@ -67,11 +66,9 @@ public class Update {
 
     }
 
-    private Employee displayRecord(String email, String username, String password) throws SQLException {
+    private Employee displayRecord(String email, DbUtilities dbUtilities) {
         Employee employee = new Employee();
         try {
-            DbUtilities dbUtilities = new DbUtilities(username, password, "Organization");
-
             String query = "SELECT name, mobile_No FROM employees WHERE email = '" + email + "'";
             ResultSet resultSet = dbUtilities.readRecords(query);
 
@@ -115,8 +112,6 @@ public class Update {
             } else {
                 LOGGER.info(TAB_SPACES + "No database records found.");
             }
-            //close db connection
-            dbUtilities.disconnectFromDB();
         } catch (SQLException ex) {
             LOGGER.trace(TAB_SPACES + "The following error has occurred: " + ex.getMessage());
         }

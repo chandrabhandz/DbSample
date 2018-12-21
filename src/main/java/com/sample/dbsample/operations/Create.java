@@ -5,7 +5,6 @@ import com.sample.dbsample.dbutils.DbUtilities;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import java.sql.SQLException;
 import java.util.Scanner;
 
 public class Create {
@@ -13,7 +12,7 @@ public class Create {
     private static final Logger LOGGER = Logger.getLogger(Application.class);
     private static final String TAB_SPACES = "\t\t\t\t\t\t";
 
-    public Create(String username, String password) throws SQLException {
+    public Create(DbUtilities dbUtilities) {
         Scanner userInput = new Scanner(System.in);
         LOGGER.info(TAB_SPACES + "Selected option is : New employee Creation : ");
 
@@ -31,7 +30,6 @@ public class Create {
 
         LOGGER.info("\n");
 
-        DbUtilities dbUtilities = new DbUtilities(username, password, "Organization");
 
         if (StringUtils.isBlank(name) || StringUtils.isBlank(email) || StringUtils.isBlank(contactNumber)) {
             LOGGER.info(TAB_SPACES + "Fields must not be empty or null.");

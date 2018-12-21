@@ -1,5 +1,7 @@
 package com.sample.dbsample.config;
 
+import com.sample.dbsample.Constants;
+import com.sample.dbsample.dbutils.MysqlDbUtilities;
 import com.sample.dbsample.operations.Create;
 import com.sample.dbsample.operations.Delete;
 import com.sample.dbsample.operations.Read;
@@ -10,10 +12,12 @@ import org.apache.log4j.Logger;
 import java.sql.SQLException;
 import java.util.Scanner;
 
+import static com.sample.dbsample.Constants.TAB_SPACES;
+
 public class ConnectOrganizationDatabase {
 
     private static final Logger LOGGER = LogManager.getLogger(ConnectOrganizationDatabase.class);
-    private static final String TAB_SPACES = "\t\t\t\t\t\t";
+
 
     public ConnectOrganizationDatabase(String username, String password) throws SQLException {
         displayMenu(username, password);
@@ -43,16 +47,16 @@ public class ConnectOrganizationDatabase {
 
             switch (readMenu) {
                 case "1":
-                     new Create(username, password);
+                    new Create(new MysqlDbUtilities(username, password, Constants.DB_NAME));
                     break;
                 case "2":
-                    new Read(username, password);
+                    new Read(new MysqlDbUtilities(username, password, Constants.DB_NAME));
                     break;
                 case "3":
-                    new Update(username, password);
+                    new Update(new MysqlDbUtilities(username, password, Constants.DB_NAME));
                     break;
                 case "4":
-                    new Delete(username, password);
+                    new Delete(new MysqlDbUtilities(username, password, Constants.DB_NAME));
                     break;
                 case "5":
                     LOGGER.info("System exiting");

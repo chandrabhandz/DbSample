@@ -2,6 +2,7 @@ package com.sample.dbsample.operations;
 
 import com.sample.dbsample.Application;
 import com.sample.dbsample.dbutils.DbUtilities;
+import com.sample.dbsample.dbutils.MysqlDbUtilities;
 import dnl.utils.text.table.TextTable;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -11,12 +12,13 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.Scanner;
 
+import static com.sample.dbsample.Constants.TAB_SPACES;
+
 public class Delete {
 
     private static final Logger LOGGER = Logger.getLogger(Application.class);
-    private static final String TAB_SPACES = "\t\t\t\t\t\t";
 
-    public Delete(String username, String password) throws SQLException {
+    public Delete(DbUtilities dbUtilities) {
         Scanner userInput = new Scanner(System.in);
         LOGGER.info(TAB_SPACES + "Selected option is : Delete employee's Details ");
 
@@ -30,7 +32,7 @@ public class Delete {
         }
 
         //retrieve record to delete
-        DisplayRecord(username, password, email);
+        this.displayRecord(dbUtilities, email);
 
         String confirmDelete;
         LOGGER.info(TAB_SPACES + "Enter Y to confirm deletion : ");
@@ -38,7 +40,6 @@ public class Delete {
 
         if ("Y".equalsIgnoreCase(confirmDelete)) {
 
-            DbUtilities dbUtilities = new DbUtilities(username, password, "Organization");
             String query = "DELETE FROM employees WHERE email = '" + email + "'";
             dbUtilities.executeSQLStatement(query);
 
@@ -46,10 +47,8 @@ public class Delete {
         }
     }
 
-    private void DisplayRecord(String username, String password, String email) throws SQLException {
+    private void displayRecord(DbUtilities dbUtilities, String email) {
         try {
-            DbUtilities dbUtilities = new DbUtilities(username, password, "Organization");
-
             String query = "SELECT name, email, mobile_No FROM employees WHERE email = '" + email + "'";
             ResultSet resultSet = dbUtilities.readRecords(query);
 
@@ -86,11 +85,8 @@ public class Delete {
 
             } else {
                 LOGGER.info(TAB_SPACES + "No database records found.");
-                //Application.DisplayMenu();
             }
 
-            //close db connection
-            dbUtilities.disconnectFromDB();
         } catch (SQLException ex) {
             LOGGER.trace(TAB_SPACES + "The following error has occurred: " + ex.getMessage());
         }

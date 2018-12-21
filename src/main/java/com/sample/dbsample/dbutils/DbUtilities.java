@@ -1,48 +1,23 @@
 package com.sample.dbsample.dbutils;
 
+
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Objects;
 
+public abstract class DbUtilities {
+    private static final Logger LOG = LogManager.getLogger(MysqlDbUtilities.class);
+    protected static final String TAB_SPACES = "\t\t\t\t\t\t:";
+    protected Connection connection = null;
+    protected Statement statement = null;
+    protected ResultSet resultSet = null;
 
-public class DbUtilities {
-
-    private static final Logger LOG = LogManager.getLogger(DbUtilities.class);
-
-    private static final String DATABASE_URL = "jdbc:mysql://localhost:3306/";
-    private static final String TAB_SPACES = "\t\t\t\t\t\t";
-    private Connection connection = null;
-    private Statement statement = null;
-    private ResultSet resultSet = null;
-
-
-    public DbUtilities(String username, String password) throws SQLException {
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-            connection = DriverManager.getConnection(DATABASE_URL, username, password);
-        } catch (SQLException ex) {
-            System.out.println(TAB_SPACES + "The following error has occurred: " + ex.getMessage());
-        } catch (ClassNotFoundException e) {
-            LOG.trace(TAB_SPACES + "The following error has occurred: " + e.getMessage());
-        }
-    }
-
-    public DbUtilities(String username, String password, String dbName) throws SQLException {
-        try {
-            Class.forName("com.mysql.jdbc.Driver");
-            connection = DriverManager.getConnection(DATABASE_URL + dbName, username, password);
-        } catch (SQLException ex) {
-            System.out.println(TAB_SPACES + "The following error has occurred: " + ex.getMessage());
-        } catch (ClassNotFoundException e) {
-            LOG.trace(TAB_SPACES + "The following error has occurred: " + e.getMessage());
-        }
-    }
+    abstract void init(String username, String password, String dbname);
 
     public void disconnectFromDB() {
 
@@ -51,7 +26,7 @@ public class DbUtilities {
             statement.close();
             connection.close();
         } catch (Exception ex) {
-            LOG.trace(TAB_SPACES + "The following error has occurred: " + ex.getMessage());
+            LOG.trace(TAB_SPACES + ex.getMessage());
         }
     }
 
@@ -62,7 +37,7 @@ public class DbUtilities {
 
             return resultSet;
         } catch (SQLException ex) {
-            LOG.trace(TAB_SPACES + "The following error has occurred: " + ex.getMessage());
+            LOG.trace(TAB_SPACES + ex.getMessage());
         }
 
         return resultSet;
@@ -87,7 +62,7 @@ public class DbUtilities {
                 }
             } while (resultSet.next());
         } catch (SQLException ex) {
-            LOG.trace(TAB_SPACES + "The following error has occurred: " + ex.getStackTrace());
+            LOG.trace(TAB_SPACES + ex.getMessage());
         }
     }
 }

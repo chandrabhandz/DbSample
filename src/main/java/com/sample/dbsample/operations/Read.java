@@ -1,8 +1,9 @@
 package com.sample.dbsample.operations;
 
 import com.sample.dbsample.Application;
-import dnl.utils.text.table.TextTable;
+import com.sample.dbsample.Constants;
 import com.sample.dbsample.dbutils.DbUtilities;
+import dnl.utils.text.table.TextTable;
 import org.apache.log4j.Logger;
 
 import java.sql.ResultSet;
@@ -12,16 +13,14 @@ import java.sql.SQLException;
 public class Read {
 
     private static final Logger LOGGER = Logger.getLogger(Application.class);
-    private static final String TAB_SPACES = "\t\t\t\t\t\t";
 
-    public Read(String username, String password) throws SQLException {
-        LOGGER.info(TAB_SPACES + "Selected option is : All Employees Details : ");
-        DisplayResults(username, password);
+    public Read(DbUtilities dbUtilities) {
+        LOGGER.info(Constants.TAB_SPACES + "Selected option is : All Employees Details : ");
+        this.displayResults(dbUtilities);
     }
 
-    private void DisplayResults(String username, String password) throws SQLException {
+    private void displayResults(DbUtilities dbUtilities) {
         try {
-            DbUtilities dbUtilities = new DbUtilities(username, password, "Organization");
 
             String query = "SELECT name, email, mobile_No FROM employees";
             ResultSet resultSet = dbUtilities.readRecords(query);
@@ -56,13 +55,11 @@ public class Read {
                 textTable.printTable();
                 LOGGER.info("\n");
             } else {
-                LOGGER.info(TAB_SPACES + "No database records found");
+                LOGGER.info(Constants.TAB_SPACES + "No database records found");
             }
 
-            //close db connection
-            dbUtilities.disconnectFromDB();
         } catch (SQLException ex) {
-            LOGGER.trace(TAB_SPACES + "The following error has occurred: " + ex.getMessage());
+            LOGGER.trace(Constants.TAB_SPACES + "The following error has occurred: " + ex.getMessage());
         }
     }
 }

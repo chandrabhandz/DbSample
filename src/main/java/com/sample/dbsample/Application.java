@@ -2,6 +2,7 @@ package com.sample.dbsample;
 
 import com.sample.dbsample.config.ConnectOrganizationDatabase;
 import com.sample.dbsample.config.ConnectSystemMySQL;
+import com.sample.dbsample.dbutils.OracleDbUtilities;
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 
@@ -56,7 +57,10 @@ public class Application {
                 case "2":
                     new ConnectOrganizationDatabase(username, password);
                     break;
-                case "3":
+                case "3" :
+                    new OracleDbUtilities(username, password);
+                    break;
+                case "4":
                     LOGGER.info("System exiting");
                     System.exit(0);
                     break;
