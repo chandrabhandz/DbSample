@@ -1,29 +1,35 @@
 package com.sample.dbsample.config;
 
 import com.sample.dbsample.Constants;
+import com.sample.dbsample.dbutils.DbUtilities;
 import com.sample.dbsample.dbutils.MysqlDbUtilities;
 import com.sample.dbsample.operations.Create;
 import com.sample.dbsample.operations.Delete;
 import com.sample.dbsample.operations.Read;
 import com.sample.dbsample.operations.Update;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-import java.sql.SQLException;
 import java.util.Scanner;
 
 import static com.sample.dbsample.Constants.TAB_SPACES;
 
-public class ConnectOrganizationDatabase {
+public class EmployeeConnector extends Connector {
 
-    private static final Logger LOGGER = LogManager.getLogger(ConnectOrganizationDatabase.class);
+    private static final Logger LOGGER = LogManager.getLogger(EmployeeConnector.class);
 
-
-    public ConnectOrganizationDatabase(String username, String password) throws SQLException {
-        displayMenu(username, password);
+    public EmployeeConnector(String username, String password) {
+        super(username, password);
     }
 
-    private void displayMenu(String username, String password) throws SQLException {
+    @Override
+    public DbUtilities getDbUtility() {
+        return new MysqlDbUtilities(username, password, StringUtils.EMPTY);
+    }
+
+    @Override
+    public void process() {
         Scanner userInput = new Scanner(System.in);
         String readMenu;
 
