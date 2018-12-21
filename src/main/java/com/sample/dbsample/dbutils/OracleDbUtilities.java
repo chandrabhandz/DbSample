@@ -12,7 +12,7 @@ public class OracleDbUtilities extends DbUtilities {
 
     private static final Logger LOG = LogManager.getLogger(OracleDbUtilities.class);
 
-    private static final String DATABASE_URL = "jdbc:oracle:thin:@localhost:49161:xe";
+    private static final String DATABASE_URL = "jdbc:oracle:thin:@192.168.0.168:49161:xe";
     private String username;
     private String password;
 

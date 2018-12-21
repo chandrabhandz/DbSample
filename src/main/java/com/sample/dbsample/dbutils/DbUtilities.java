@@ -1,6 +1,5 @@
 package com.sample.dbsample.dbutils;
 
-
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -8,11 +7,10 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Objects;
 
 public abstract class DbUtilities {
-    private static final Logger LOG = LogManager.getLogger(MysqlDbUtilities.class);
     protected static final String TAB_SPACES = "\t\t\t\t\t\t:";
+    private static final Logger LOG = LogManager.getLogger(MysqlDbUtilities.class);
 
     abstract void init(String username, String password, String dbname);
 
@@ -35,7 +33,7 @@ public abstract class DbUtilities {
             statement.executeUpdate(query);
             ResultSet resultSet = statement.getResultSet();
             do {
-                if (Objects.isNull(resultSet)) {
+                if (!resultSet.first()) {
                     break;
                 } else {
                     if (resultSet.next()) {
