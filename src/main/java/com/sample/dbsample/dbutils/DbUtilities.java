@@ -13,46 +13,31 @@ import java.util.Objects;
 public abstract class DbUtilities {
     private static final Logger LOG = LogManager.getLogger(MysqlDbUtilities.class);
     protected static final String TAB_SPACES = "\t\t\t\t\t\t:";
-    protected Connection connection = null;
-    protected Statement statement = null;
-    protected ResultSet resultSet = null;
 
     abstract void init(String username, String password, String dbname);
 
-    public void disconnectFromDB() {
+    abstract Connection getConnection();
 
-        try {
-            resultSet.close();
-            statement.close();
-            connection.close();
-        } catch (Exception ex) {
-            LOG.trace(TAB_SPACES + ex.getMessage());
-        }
-    }
 
     public ResultSet readRecords(String query) {
-        try {
-            statement = connection.createStatement();
-            resultSet = statement.executeQuery(query);
-
-            return resultSet;
+        try (Connection connection = this.getConnection()) {
+            Statement statement = connection.createStatement();
+            return statement.executeQuery(query);
         } catch (SQLException ex) {
-            LOG.trace(TAB_SPACES + ex.getMessage());
+            LOG.error(TAB_SPACES + ex.getMessage());
         }
-
-        return resultSet;
+        return null;
     }
 
     public void executeSQLStatement(String query) {
-        try {
-            statement = connection.createStatement();
+        try (Connection connection = this.getConnection()) {
+            Statement statement = connection.createStatement();
             statement.executeUpdate(query);
-
+            ResultSet resultSet = statement.getResultSet();
             do {
-                if (Objects.isNull(statement.getResultSet())) {
+                if (Objects.isNull(resultSet)) {
                     break;
                 } else {
-                    resultSet = statement.getResultSet();
                     if (resultSet.next()) {
                         int numColumns = resultSet.getMetaData().getColumnCount();
                         for (int i = 1; i <= numColumns; i++) {
@@ -62,7 +47,7 @@ public abstract class DbUtilities {
                 }
             } while (resultSet.next());
         } catch (SQLException ex) {
-            LOG.trace(TAB_SPACES + ex.getMessage());
+            LOG.error(TAB_SPACES + ex.getMessage());
         }
     }
 }
